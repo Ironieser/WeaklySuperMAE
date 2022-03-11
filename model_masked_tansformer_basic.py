@@ -1,40 +1,22 @@
-
-
 import torch
 import torch.nn as nn
 import math
 from timm.models.vision_transformer import Block
 
-class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, dropout=0.1, max_len=500):
-        super().__init__()
-        # self.dropout = nn.Dropout(p=dropout)
-
-        pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0).transpose(0, 1)
-        self.register_buffer('pe', pe)
-
-    def forward(self, x):
-        x = x + self.pe[:x.size(0), :]
-        # x = self.dropout(x)
-        return x
-
 
 class MaskedAutoencoder(nn.Module):
 
-    def __init__(self, in_chans=1024, embed_dim=1024, encoder_depth=4, num_heads=8,
-                 decoder_embed_dim=512, decoder_depth=4, decoder_num_heads=8,
-                 mlp_ratio=4., norm_layer=nn.LayerNorm, norm_pix_loss=False):
+    def __init__(self, in_chans=1024,
+                 embed_dim=1024, encoder_depth=12, num_heads=16,
+                 decoder_embed_dim=512, decoder_depth=4, decoder_num_heads=16,
+                 mlp_ratio=4., norm_layer=nn.LayerNorm, norm_pix_loss=False, max_len=1000):
         super().__init__()
+        self.max_len = max_len
         # --------------------------------------------------------------------------
         # MAE encoder specifics
         # No class token
         self.encoder_embed = nn.Linear(in_chans, embed_dim, bias=True)
-        self.pos_embed = PositionalEncoding(embed_dim)
+        self.pos_embed = nn.Parameter(torch.zeros(1, self.max_len, embed_dim), requires_grad=False)
 
         self.encoder_blocks = nn.ModuleList([
             Block(embed_dim, num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer)
@@ -47,14 +29,14 @@ class MaskedAutoencoder(nn.Module):
         self.decoder_embed = nn.Linear(embed_dim, decoder_embed_dim, bias=True)
 
         self.mask_token = nn.Parameter(torch.zeros(1, 1, decoder_embed_dim))
-        self.decoder_pos_embed = PositionalEncoding(decoder_embed_dim)
+        self.decoder_pos_embed = nn.Parameter(torch.zeros(1, self.max_len, decoder_embed_dim),
+                                              requires_grad=False)  # fixed sin-cos embedding
 
         self.decoder_blocks = nn.ModuleList([
             Block(decoder_embed_dim, decoder_num_heads, mlp_ratio, qkv_bias=True, norm_layer=norm_layer)
             for i in range(decoder_depth)])
 
         self.decoder_norm = norm_layer(decoder_embed_dim)
-
         self.decoder_pred = nn.Linear(decoder_embed_dim, in_chans, bias=True)  # decoder to feature
         # --------------------------------------------------------------------------
 
@@ -62,8 +44,25 @@ class MaskedAutoencoder(nn.Module):
 
         self.initialize_weights()
 
+    def get_1d_sincos_pos_embed(self, d_model=1024, max_len=1000):
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)  # -> [1,max_len,d_model]
+        return pe
+
     def initialize_weights(self):
         # initialization
+        # initialize (and freeze) pos_embed by sin-cos embedding
+        pos_embed = self.get_1d_sincos_pos_embed(d_model=self.pos_embed.shape[2],
+                                                 max_len=self.pos_embed.shape[1])
+        self.pos_embed.data.copy_(pos_embed)
+
+        decoder_pos_embed = self.get_1d_sincos_pos_embed(d_model=self.decoder_pos_embed.shape[2],
+                                                         max_len=self.decoder_pos_embed.shape[1])
+        self.decoder_pos_embed.data.copy_(decoder_pos_embed)
 
         # timm's trunc_normal_(std=.02) is effectively normal_(std=0.02) as cutoff is too big (2.)
         torch.nn.init.normal_(self.mask_token, std=.02)
@@ -109,22 +108,10 @@ class MaskedAutoencoder(nn.Module):
 
         return x_masked, mask, ids_restore
 
-    def forward(self, x, mask_ratio=0.25):
-        '''
-        x : input feature [batch_size, length, dim]
-        '''
-        latent, mask, ids_restore = self.forward_encoder(x, mask_ratio)
-        # print("encoder size:",latent.shape)
-        # print('mask shape',mask.shape)
-        pred = self.forward_decoder(latent, ids_restore)  # [N, L, f_size*f_size*channel]
-        loss = self.forward_loss(x, pred, mask)
-        # print("decoder size:",x.shape)
-        return loss, pred, mask
-
     def forward_encoder(self, x, mask_ratio):
-        x = self.encoder_embed(x)
+        # x:[10,t,1024,]
 
-        x = x + self.pos_embed(x)
+        x = x + self.pos_embed[:, :x.size(1), :]
 
         # masking: length -> length * mask_ratio
         x, mask, ids_restore = self.random_masking(x, mask_ratio)
@@ -136,17 +123,17 @@ class MaskedAutoencoder(nn.Module):
         return x, mask, ids_restore
 
     def forward_decoder(self, x, ids_restore):
+        # embed tokens
         x = self.decoder_embed(x)
 
         # append mask tokens to sequence
         # x.shape [batch_size, length, dim]
         mask_tokens = self.mask_token.repeat(x.shape[0], ids_restore.shape[1] - x.shape[1], 1)
-        # print('mask_tokens shape: ',mask_tokens.shape)
-        x_ = torch.cat([x, mask_tokens], dim=1)  # no cls token
-        x_ = torch.gather(x_, dim=1, index=ids_restore.unsqueeze(-1).repeat(1, 1, x.shape[2]))  # unshuffle
+        x = torch.cat([x, mask_tokens], dim=1)  # no cls token
+        x = torch.gather(x, dim=1, index=ids_restore.unsqueeze(-1).repeat(1, 1, x.shape[2]))  # unshuffle
 
         # add pos embed
-        x = x_ + self.decoder_pos_embed(x_)
+        x = x + self.decoder_pos_embed[:, :x.size(1), :]
 
         # apply Transformer blocks
         for blk in self.decoder_blocks:
@@ -158,45 +145,31 @@ class MaskedAutoencoder(nn.Module):
 
         return x
 
-    def forward_loss(self, input_feature, pred_feature, mask):
+    def forward_loss(self, target, pred_feature, mask):
         """
-        input_feature: [batchsize, length, channel]
+        input_feature: [batchsize, length, channel] is target
         pred_feature: [batchsize, length, channel]
         mask: [batch_size, length], 0 is keep, 1 is remove,
         """
-        target = input_feature
-        if self.norm_pix_loss:
-            mean = target.mean(dim=-1, keepdim=True)
-            var = target.var(dim=-1, keepdim=True)
-            target = (target - mean) / (var + 1.e-6) ** .5
-
         loss = (pred_feature - target) ** 2
         loss = loss.mean(dim=-1)  # [N, L], mean loss per frame
 
-        loss = (loss * mask).sum() / mask.sum()  # mean loss on removed patches 只计算masked loss
+        loss = (loss * mask).sum() / mask.sum()  # mean loss on removed feature
 
         return loss
 
+    def forward(self, x, mask_ratio=0.25):
+        '''
+        feature: [10,1024,t]
+        x : [10,1024,t] -> input size [batch_size, length, dim]
+        '''
+        x = x.transpose(1, 2)  # ->[10,t,1024]
+        latent, mask, ids_restore = self.forward_encoder(x, mask_ratio)
+        pred = self.forward_decoder(latent, ids_restore)  # [N, L, f_size*f_size*channel]
+        loss = self.forward_loss(x, pred, mask)
+        return loss, pred, mask
 
-class transform_basic(nn.Module):
-    def __init__(self, ):
-        super(transform_basic, self).__init__()
-
-
-    def forward(self, x, components=None):
-        # batch size should be 1
-        # input feature [10,1024, t]
-
-        b, c, t,= x.size()
-
-        with torch.no_grad():
-            pass
-        return x
-
-    def load_model(self, config, checkpoint):
-        """加载预训练模型"""
-        cfg = Config.fromfile(config)
-        model = build_model(cfg.model, train_cfg=cfg.get('train_cfg'), test_cfg=cfg.get('test_cfg'))
-        load_checkpoint(model, checkpoint, map_location='cpu')
-        print('--------- backbone loading finished ------------')
-        return model.backbone
+# t = MaskedAutoencoder()
+# x = torch.rand([2,1024,6])
+# loss, pred, mask = t(x)
+# print(loss)

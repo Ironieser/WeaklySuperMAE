@@ -45,7 +45,4 @@ class MyDataset(Dataset):
 
     def __len__(self):
         """返回数据集的大小"""
-        return len(self.clip_list)
-data=MyDataset(debug = True)
-x = data[1]
-print(x)
+        return len(self.video_names)
