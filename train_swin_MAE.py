@@ -4,42 +4,37 @@ import platform
 import random
 
 import numpy as np
-import torch
+import timm.optim.optim_factory as optim_factory
 import torch.backends.cudnn
-import torch.nn as nn
-from mmcv.parallel import MMDataParallel
 from tensorboardX import SummaryWriter
 # import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
 from torch.utils.data import DataLoader
-from torchvision.transforms import ToPILImage
 from tqdm import tqdm
-import timm.optim.optim_factory as optim_factory
+import math
 # from build_swrepnet import swrepnet
 from model_masked_tansformer_basic import MaskedAutoencoder
-import ipdb
 
 seed = 1
 random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 np.random.seed(seed)
-torch.backends.cudnn.deterministic = True
+# torch.backends.cudnn.deterministic = True
 # LR = 6e-6
 num_epochs = 400
 preheat_epoch = 0
 BATCH_SIZE = 1
-NUM_WORKERS = 16
+NUM_WORKERS = 0
 LOG_DIR = './log/swin_MAE_log0311_0'
 CKPT_DIR = './ckpt/ckp_swin_MAE__log0311_0'
 new_train = True
 lastCkptPath = None
 # lastCkptPath = '/public/home/dongsx/rep_proj/swrnet/ckp_repdm_i3d_1/ckpt190_valMAE_1.454.pt'
 # lastCkptPath = r'/public/home/zhaoyq/GTRM/cvpr2020/ckp_GTRM_feat_4/ckpt_71_valMAE_1.0.pt'
-features_dim = 2048
-
 
 if platform.system() == 'Windows':
+    data_root = r'E:\CS\pose\SWRNET\data\LSP'
     NUM_WORKERS = 0
     lastCkptPath = None
     BATCH_SIZE = 1
@@ -48,11 +43,12 @@ if platform.system() == 'Windows':
     # device = torch.device('cpu')
     device = torch.device('cuda')
 else:
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    # data_root = r'/public/home/zhaoyq/LLSP_npz'
+    # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     device_ids = [0]
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.enabled = False
     device = torch.device("cuda:" + str(device_ids[0]) if torch.cuda.is_available() else "cpu")
+
 if not os.path.exists(CKPT_DIR):
     os.mkdir(CKPT_DIR)
 if not os.path.exists(LOG_DIR):
@@ -62,10 +58,10 @@ from dataset_feature_swin import MyDataset
 
 train_dataset = MyDataset()
 train_loader = DataLoader(dataset=train_dataset, pin_memory=False, batch_size=BATCH_SIZE,
-                          drop_last=False, shuffle=False, num_workers=NUM_WORKERS)
+                          drop_last=False, shuffle=True, num_workers=NUM_WORKERS)
 
 
-import math
+
 
 def adjust_learning_rate(optimizer, curr_epoch,LR,min_lr,epochs,warmup_epochs):
     """Decay the learning rate with half-cycle cosine after warmup"""
@@ -82,11 +78,11 @@ def adjust_learning_rate(optimizer, curr_epoch,LR,min_lr,epochs,warmup_epochs):
     return lr
 
 if __name__ == '__main__':
-
+    # device = 'cpu'
     model = MaskedAutoencoder()
-    if torch.cuda.device_count() > 1:
-        print("Let's use", torch.cuda.device_count(), "GPUs!")
-        model = MMDataParallel(model, device_ids=device_ids)
+    # if torch.cuda.device_count() > 1:
+    #     print("Let's use", torch.cuda.device_count(), "GPUs!")
+    #     model = MMDataParallel(model, device_ids=device_ids)
     model.to(device)
 
     # tensorboard
@@ -119,7 +115,7 @@ if __name__ == '__main__':
         currEpoch = 0
         currTrainstep = 0
         currValidationstep = 0
-    criterion1 = nn.MSELoss().to(device)
+    # criterion1 = nn.MSELoss().to(device)
     scaler = GradScaler()
     # optimizer = torch.optim.Adam([{'params': model.parameters(), 'initial_lr': 1e-5}], lr=LR)
     param_groups = optim_factory.add_weight_decay(model, 0.05)

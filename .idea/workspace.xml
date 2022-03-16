@@ -2,11 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a5f51311-608c-4405-bbf5-84a23355c5d8" name="默认变更列表" comment="">
-      <change afterPath="$PROJECT_DIR$/train_swin_MAE.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/WSVAD.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/remote-mappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model_swin_MAE_fintune.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dataset_feature_swin.py" beforeDir="false" afterPath="$PROJECT_DIR$/dataset_feature_swin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mae/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/mae/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mae/models_vit.py" beforeDir="false" afterPath="$PROJECT_DIR$/mae/models_vit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model_masked_tansformer_basic.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_masked_tansformer_basic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train_swin_MAE.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_swin_MAE.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +37,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
@@ -39,36 +48,14 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\WSVAD" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.train_swin_MAE">
-    <configuration name="calculate_mean_std_from_img" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="WSVAD" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/calculate_mean_std_from_img.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.model_masked_tansformer_basic">
     <configuration name="extract_video_swin_feature" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WSVAD" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -92,17 +79,17 @@
       <method v="2" />
     </configuration>
     <configuration name="model_masked_tansformer_basic" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="WSVAD" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="sftp://dongsx@10.15.89.191:22112/public/home/dongsx/.conda/envs/a40/bin/python" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/model_masked_tansformer_basic.py" />
       <option name="PARAMETERS" value="" />
@@ -135,6 +122,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="tokenize" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="WSVAD" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$USER_HOME$/AppData/Local/JetBrains/PyCharm2020.3/remote_sources/-583196471/1004056461" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$USER_HOME$/AppData/Local/JetBrains/PyCharm2020.3/remote_sources/-583196471/1004056461/tokenize.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="train_swin_MAE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="WSVAD" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -159,11 +168,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.train_swin_MAE" />
         <item itemvalue="Python.model_masked_tansformer_basic" />
+        <item itemvalue="Python.tokenize" />
+        <item itemvalue="Python.train_swin_MAE" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.extract_video_swin_feature" />
-        <item itemvalue="Python.calculate_mean_std_from_img" />
       </list>
     </recent_temporary>
   </component>
@@ -176,7 +185,11 @@
       <option name="presentableId" value="Default" />
       <updated>1646730592523</updated>
       <workItem from="1646730593702" duration="48827000" />
-      <workItem from="1646969140898" duration="26603000" />
+      <workItem from="1646969140898" duration="36235000" />
+      <workItem from="1647246345860" duration="596000" />
+      <workItem from="1647257125844" duration="791000" />
+      <workItem from="1647260970114" duration="3335000" />
+      <workItem from="1647271575746" duration="18924000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1646992549996</created>
@@ -199,7 +212,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646995813242</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update">
+      <created>1647016322184</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1647016322184</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,11 +245,6 @@
           <url>file://$PROJECT_DIR$/extract_video_swin_feature.py</url>
           <line>198</line>
           <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/dataset_feature_swin.py</url>
-          <line>43</line>
-          <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/extract_video_swin_feature.py</url>
@@ -262,34 +277,30 @@
           <option name="timeStamp" value="84" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model_masked_tansformer_basic.py</url>
-          <line>169</line>
-          <option name="timeStamp" value="88" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model_masked_tansformer_basic.py</url>
-          <line>168</line>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train_swin_MAE.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="90" />
+          <line>143</line>
+          <option name="timeStamp" value="91" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="ids_restore.unsqueeze(-1).repeat(1, 1, 512)" language="Python" />
+        <watch expression="nn.ModuleList(list(t.children())[3:])" language="Python" />
+        <watch expression="__py_debug_temp_var_1118688872" />
+        <watch expression="__py_debug_temp_var_1226061354" />
+        <watch expression="__py_debug_temp_var_655029620" />
+        <watch expression="__py_debug_temp_var_655029620" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/WSVAD$calculate_mean_std_from_img.coverage" NAME="calculate_mean_std_from_img 覆盖结果" MODIFIED="1646838098961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WSVAD$tokenize.coverage" NAME="tokenize 覆盖结果" MODIFIED="1647261377762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/JetBrains/PyCharm2020.3/remote_sources/-583196471/1004056461" />
     <SUITE FILE_PATH="coverage/WSVAD$dataset_feature_swin.coverage" NAME="dataset_feature_swin 覆盖结果" MODIFIED="1646835163995" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WSVAD$extract_video_swin_feature.coverage" NAME="extract_video_swin_feature 覆盖结果" MODIFIED="1646891096118" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WSVAD$test.coverage" NAME="test 覆盖结果" MODIFIED="1647010448715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mae" />
-    <SUITE FILE_PATH="coverage/WSVAD$model_masked_tansformer_basic.coverage" NAME="model_masked_tansformer_basic 覆盖结果" MODIFIED="1647011490644" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WSVAD$model_masked_tansformer_basic.coverage" NAME="model_masked_tansformer_basic 覆盖结果" MODIFIED="1647278177663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WSVAD$train_swin_MAE.coverage" NAME="train_swin_MAE 覆盖结果" MODIFIED="1647017093300" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WSVAD$__init__.coverage" NAME="__init__ 覆盖结果" MODIFIED="1646806862367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/JetBrains/PyCharm2020.3/remote_sources/-583196471/-148360783/torch" />
   </component>
 </project>

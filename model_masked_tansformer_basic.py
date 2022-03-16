@@ -160,16 +160,18 @@ class MaskedAutoencoder(nn.Module):
 
     def forward(self, x, mask_ratio=0.25):
         '''
-        feature: [10,1024,t]
+        feature: [1,10,1024,t]
         x : [10,1024,t] -> input size [batch_size, length, dim]
         '''
+        x = x.reshape(10,1024,-1)
         x = x.transpose(1, 2)  # ->[10,t,1024]
         latent, mask, ids_restore = self.forward_encoder(x, mask_ratio)
         pred = self.forward_decoder(latent, ids_restore)  # [N, L, f_size*f_size*channel]
         loss = self.forward_loss(x, pred, mask)
         return loss, pred, mask
 
-# t = MaskedAutoencoder()
+t = MaskedAutoencoder()
+print(t)
 # x = torch.rand([2,1024,6])
 # loss, pred, mask = t(x)
 # print(loss)
